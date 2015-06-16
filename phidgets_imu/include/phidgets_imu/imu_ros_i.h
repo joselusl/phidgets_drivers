@@ -17,45 +17,58 @@ const float G = 9.81;
 
 class ImuRosI : public Imu
 {
-  typedef sensor_msgs::Imu              ImuMsg;
-  typedef geometry_msgs::Vector3Stamped MagMsg;
+    typedef sensor_msgs::Imu              ImuMsg;
+    typedef geometry_msgs::Vector3Stamped MagMsg;
 
-  public:
+    public:
 
-    ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private);
+        ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private);
 
-    bool calibrateService(std_srvs::Empty::Request  &req,
-                          std_srvs::Empty::Response &res);
+        bool calibrateService(std_srvs::Empty::Request  &req,
+                            std_srvs::Empty::Response &res);
 
-  private:
+    private:
 
-    ros::NodeHandle nh_;
-    ros::NodeHandle nh_private_;
-    ros::Publisher  imu_publisher_;
-    ros::Publisher  mag_publisher_;
-    ros::Publisher  cal_publisher_;
-    ros::ServiceServer cal_srv_;
+        ros::NodeHandle nh_;
+        ros::NodeHandle nh_private_;
+        ros::Publisher  imu_publisher_;
+        ros::Publisher  mag_publisher_;
+        ros::Publisher  cal_publisher_;
+        ros::ServiceServer cal_srv_;
 
-    bool initialized_;
-    boost::mutex mutex_;
-    ros::Time last_imu_time_;
+        bool initialized_;
+        boost::mutex mutex_;
+        ros::Time last_imu_time_;
 
-    ImuMsg imu_msg_;
+        ImuMsg imu_msg_;
 
-    ros::Time time_zero_;
+        ros::Time time_zero_;
 
-    // params
+        // params
 
-    std::string frame_id_;
-    int period_;  // rate in ms
+        std::string frame_id_;
+        int period_;  // rate in ms
 
-    double angular_velocity_stdev_;
-    double linear_acceleration_stdev_;
+        double angular_velocity_stdev_;
+        double linear_acceleration_stdev_;
 
-    void calibrate();
-    void initDevice();
-    void dataHandler(CPhidgetSpatial_SpatialEventDataHandle* data, int count);
-    void processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i);
+        void calibrate();
+        void initDevice();
+        void dataHandler(CPhidgetSpatial_SpatialEventDataHandle* data, int count);
+        void processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i);
+
+
+    private:
+        int serial_number;
+
+    private:
+        std::string imu_raw_data_topic_name;
+        std::string mag_raw_data_topic_name;
+        std::string imu_is_calibrated_topic_name;
+
+    private:
+        std::string imu_calibrate_service_name;
+
 };
 
 } //namespace phidgets

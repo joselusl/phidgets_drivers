@@ -14,26 +14,46 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
 
   if (!nh_private_.getParam ("period", period_))
     period_ = 8; // 8 ms
+
+
   if (!nh_private_.getParam ("frame_id", frame_id_))
     frame_id_ = "imu";
+
+
   if (!nh_private_.getParam ("angular_velocity_stdev", angular_velocity_stdev_))
     angular_velocity_stdev_ = 0.02 * (M_PI / 180.0); // 0.02 deg/s resolution, as per manual
   if (!nh_private_.getParam ("linear_acceleration_stdev", linear_acceleration_stdev_))
     linear_acceleration_stdev_ = 300.0 * 1e-6 * G; // 300 ug as per manual
 
+  // Serial number
+  if(!nh_private_.getParam ("serial_number", serial_number))
+      serial_number = -1; // -1: means -> connect anyone
+
+  // Advertised topic names
+  if(!nh_private_.getParam ("imu_raw_data_topic_name", imu_raw_data_topic_name))
+      imu_raw_data_topic_name = "phidgets_imu/imu/data_raw";
+  if(!nh_private_.getParam ("mag_raw_data_topic_name", mag_raw_data_topic_name))
+      mag_raw_data_topic_name = "phidgets_imu/mag/data_raw";
+  if(!nh_private_.getParam ("imu_is_calibrated_topic_name", imu_is_calibrated_topic_name))
+      imu_is_calibrated_topic_name = "phidgets_imu/is_calibrated";
+
+  // Advertised service names
+  if(!nh_private_.getParam ("imu_calibrate_service_name", imu_calibrate_service_name))
+      imu_calibrate_service_name = "phidgets_imu/calibrate";
+
   // **** advertise topics
 
   imu_publisher_ = nh_.advertise<ImuMsg>(
-    "imu/data_raw", 5);
+    imu_raw_data_topic_name, 5);
   mag_publisher_ = nh_.advertise<MagMsg>(
-    "imu/mag", 5);
+    mag_raw_data_topic_name, 5);
   cal_publisher_ = nh_.advertise<std_msgs::Bool>(
-    "imu/is_calibrated", 5);
+    imu_is_calibrated_topic_name, 5);
 
   // **** advertise services
 
   cal_srv_ = nh_.advertiseService(
-    "imu/calibrate", &ImuRosI::calibrateService, this);
+    imu_calibrate_service_name, &ImuRosI::calibrateService, this);
 
   // **** initialize variables and device
   
@@ -67,7 +87,7 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
 void ImuRosI::initDevice()
 {
 	ROS_INFO("Opening device");
-	open(-1);
+    open(serial_number);
 
 	ROS_INFO("Waiting for IMU to be attached...");
 	int result = waitForAttachment(10000);
@@ -81,6 +101,7 @@ void ImuRosI::initDevice()
 	// set the data rate for the spatial events
   setDataRate(period_);
 
+  // TODO -> check if we need this!
   // calibrate on startup
   calibrate();
 }
@@ -115,7 +136,8 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
   ros::Time time_now = time_zero_ + time_imu;
 
   double timediff = time_now.toSec() - ros::Time::now().toSec();
-  if (fabs(timediff) > 0.1) {
+  if (fabs(timediff) > 0.1)
+  {
     ROS_WARN("IMU time lags behind by %f seconds, resetting IMU time offset!", timediff);
     time_zero_ = ros::Time::now() - time_imu;
     time_now = ros::Time::now();
