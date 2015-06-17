@@ -39,7 +39,8 @@
 #include <cstring>
 #include <stdio.h>
 
-namespace phidgets {
+namespace phidgets
+{
 
 class Phidget
 {

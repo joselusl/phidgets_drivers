@@ -1,0 +1,9 @@
+<!-- Phidgets GPS nodelet publisher -->
+<library path="lib/libphidgets_gps_nodelet">
+  <class name="phidgets_gps/PhidgetsGpsNodelet" type="PhidgetsGpsNodelet" 
+    base_class_type="nodelet::Nodelet">
+    <description>
+      Phidgets GPS nodelet publisher.
+    </description>
+  </class>
+</library>

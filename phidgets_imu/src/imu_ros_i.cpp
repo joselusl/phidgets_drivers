@@ -12,14 +12,15 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
 
   // **** get parameters
 
+    // Perido -> rate
   if (!nh_private_.getParam ("period", period_))
     period_ = 8; // 8 ms
 
-
+    // Frame ID
   if (!nh_private_.getParam ("frame_id", frame_id_))
     frame_id_ = "imu";
 
-
+    // Std Dev
   if (!nh_private_.getParam ("angular_velocity_stdev", angular_velocity_stdev_))
     angular_velocity_stdev_ = 0.02 * (M_PI / 180.0); // 0.02 deg/s resolution, as per manual
   if (!nh_private_.getParam ("linear_acceleration_stdev", linear_acceleration_stdev_))

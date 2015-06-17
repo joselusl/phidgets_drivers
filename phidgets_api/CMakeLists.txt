@@ -62,12 +62,22 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_library(phidgets_api src/phidget.cpp
                          src/imu.cpp
-                         src/ir.cpp)
+                         src/ir.cpp
+                         src/gps.cpp)
 
 # the line below is not necessary, since the external project has already been built
 #add_dependencies(phidgets_api phidget21)
 target_link_libraries(phidgets_api ${catkin_LIBRARIES} phidget21)
 
+
+
+# Test programs
+add_executable(phidgets_api_test_gps tests/test_gps.cpp)
+target_link_libraries(phidgets_api_test_gps ${catkin_LIBRARIES} phidgets_api)
+
+
+
+# Intallation
 install(TARGETS phidgets_api
    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}

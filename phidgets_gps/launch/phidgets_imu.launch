@@ -1,0 +1,31 @@
+<!-- Phidgets IMU launch file -->
+
+<launch>
+
+  
+  <node pkg="phidgets_imu" type="phidgets_imu_node" name="PhidgetsImuNode" output="screen">
+
+    # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
+    <param name="period" value="4"/>
+
+
+    <param name="frame_id" value="imu"/>
+
+
+    # IMU mala = 297692
+    # IMU buena = 354790
+    <param name="serial_number" value="297692"/>
+
+
+    <param name="imu_raw_data_topic_name" value="phidgets_imu/imu/data_raw"/>
+    <param name="mag_raw_data_topic_name" value="phidgets_imu/mag/data_raw"/>
+    <param name="imu_is_calibrated_topic_name" value="phidgets_imu/is_calibrated"/>
+
+
+    <param name="imu_calibrate_service_name" value="phidgets_imu/calibrate"/>
+
+  </node>
+
+  
+
+</launch>
