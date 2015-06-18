@@ -92,13 +92,13 @@ void GpsRosI::initDevice()
 	ROS_INFO("Opening device");
     open(serial_number);
 
-	ROS_INFO("Waiting for IMU to be attached...");
+    ROS_INFO("Waiting for GPS to be attached...");
 	int result = waitForAttachment(10000);
 	if(result)
 	{
 	  const char *err;
 		CPhidget_getErrorDescription(result, &err);
-		ROS_FATAL("Problem waiting for IMU attachment: %s Make sure the USB cable is connected and you have executed the phidgets_c_api/setup-udev.sh script.", err);
+        ROS_FATAL("Problem waiting for GPS attachment: %s Make sure the USB cable is connected and you have executed the phidgets_c_api/setup-udev.sh script.", err);
 	}
 
 
@@ -163,83 +163,6 @@ void GpsRosI::processNavSatStatusData(int status)
     return;
 }
 
-
-/*
-void GpsRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i)
-{
-  // **** calculate time from timestamp
-  ros::Duration time_imu(data[i]->timestamp.seconds + 
-                         data[i]->timestamp.microseconds * 1e-6);
-
-  ros::Time time_now = time_zero_ + time_imu;
-
-  double timediff = time_now.toSec() - ros::Time::now().toSec();
-  if (fabs(timediff) > 0.1)
-  {
-    ROS_WARN("IMU time lags behind by %f seconds, resetting IMU time offset!", timediff);
-    time_zero_ = ros::Time::now() - time_imu;
-    time_now = ros::Time::now();
-  }
-
-  // **** initialize if needed
-
-  if (!initialized_)
-  { 
-    last_imu_time_ = time_now;
-    initialized_ = true;
-  }
-
-  // **** create and publish imu message
-
-  boost::shared_ptr<ImuMsg> imu_msg = 
-    boost::make_shared<ImuMsg>(imu_msg_);
-
-  imu_msg->header.stamp = time_now;
-
-  // set linear acceleration
-  imu_msg->linear_acceleration.x = - data[i]->acceleration[0] * G;
-  imu_msg->linear_acceleration.y = - data[i]->acceleration[1] * G;
-  imu_msg->linear_acceleration.z = - data[i]->acceleration[2] * G;
-
-  // set angular velocities
-  imu_msg->angular_velocity.x = data[i]->angularRate[0] * (M_PI / 180.0);
-  imu_msg->angular_velocity.y = data[i]->angularRate[1] * (M_PI / 180.0);
-  imu_msg->angular_velocity.z = data[i]->angularRate[2] * (M_PI / 180.0);
-
-  imu_publisher_.publish(imu_msg);
-
-  // **** create and publish magnetic field message
-
-  boost::shared_ptr<MagMsg> mag_msg = 
-    boost::make_shared<MagMsg>();
-  
-  mag_msg->header.frame_id = frame_id_;
-  mag_msg->header.stamp = time_now;
-
-  if (data[i]->magneticField[0] != PUNK_DBL)
-  {
-    mag_msg->vector.x = data[i]->magneticField[0];
-    mag_msg->vector.y = data[i]->magneticField[1];
-    mag_msg->vector.z = data[i]->magneticField[2];
-  }
-  else
-  {
-    double nan = std::numeric_limits<double>::quiet_NaN();
-
-    mag_msg->vector.x = nan;
-    mag_msg->vector.y = nan;
-    mag_msg->vector.z = nan;
-  }
-   
-  mag_publisher_.publish(mag_msg);
-}
-
-void GpsRosI::dataHandler(CPhidgetSpatial_SpatialEventDataHandle *data, int count)
-{
-  for(int i = 0; i < count; i++)
-    processImuData(data, i);
-}
-*/
 
 
 } // namespace phidgets
