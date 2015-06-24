@@ -106,16 +106,44 @@ void GpsRosI::initDevice()
 
 
 
-void GpsRosI::positionChangeHandler(double latitude, double longitude, double altitude,
-                                           double heading,
-                                           double velocity,
-                                           GPSDate date, GPSTime time,
-                                           NMEAData NMEAdata)
+//void GpsRosI::positionChangeHandler(double latitude, double longitude, double altitude,
+//                                           double heading,
+//                                           double velocity,
+//                                           GPSDate date, GPSTime time,
+//                                           NMEAData NMEAdata)
+//{
+//    processNavSatFixData(latitude, longitude, altitude);
+//    processTimeReferenceData(date, time);
+//    return;
+//}
+
+void GpsRosI::positionHandler(double latitude, double longitude, double altitude)
 {
     processNavSatFixData(latitude, longitude, altitude);
+    return;
+}
+
+void GpsRosI::headingHandler(double heading)
+{
+    return;
+}
+
+void GpsRosI::velocityHandler(double velocity)
+{
+    return;
+}
+
+void GpsRosI::dateAndTimeHandler(GPSDate date, GPSTime time)
+{
     processTimeReferenceData(date, time);
     return;
 }
+
+void GpsRosI::nmeaDataHandler(NMEAData NMEAdata)
+{
+    return;
+}
+
 
 void GpsRosI::positionFixStatusChangeHandler(int status)
 {
@@ -163,6 +191,18 @@ void GpsRosI::processNavSatStatusData(int status)
     return;
 }
 
+
+
+
+
+GpsAsyncRosI::GpsAsyncRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
+    GpsRosI(nh,nh_private),
+    GpsAsync()
+{
+
+
+    return;
+}
 
 
 } // namespace phidgets

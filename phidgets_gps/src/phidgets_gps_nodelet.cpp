@@ -12,5 +12,5 @@ void PhidgetsGpsNodelet::onInit()
   ros::NodeHandle nh         = getMTNodeHandle();
   ros::NodeHandle nh_private = getMTPrivateNodeHandle();
 
-  gps_ = new GpsRosI(nh, nh_private);
+  gps_ = new GpsAsyncRosI(nh, nh_private);
 }

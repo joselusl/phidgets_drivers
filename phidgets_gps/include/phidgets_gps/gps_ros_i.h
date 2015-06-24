@@ -35,7 +35,7 @@ namespace phidgets
 {
 
 
-class GpsRosI : public Gps
+class GpsRosI : public virtual Gps
 {
 
     public:
@@ -86,17 +86,17 @@ class GpsRosI : public Gps
     private:
         void initDevice();
 
-    private:
+    protected:
         // Function event handlers
-        void positionChangeHandler(double latitude, double longitude, double altitude,
-                                                   double heading,
-                                                   double velocity,
-                                                   GPSDate date, GPSTime time,
-                                                   NMEAData NMEAdata);
+        void positionHandler(double latitude, double longitude, double altitude);
+        void headingHandler(double heading);
+        void velocityHandler(double velocity);
+        void dateAndTimeHandler(GPSDate date, GPSTime time);
+        void nmeaDataHandler(NMEAData NMEAdata);
 
         void positionFixStatusChangeHandler(int status);
 
-    private:
+    protected:
         // Function process data
         void processNavSatFixData(double latitude, double longitude, double altitude);
         void processTimeReferenceData(GPSDate date, GPSTime time);
@@ -104,6 +104,20 @@ class GpsRosI : public Gps
 
 
 };
+
+
+class GpsAsyncRosI : public GpsAsync, public GpsRosI
+{
+
+public:
+
+    GpsAsyncRosI(ros::NodeHandle nh, ros::NodeHandle nh_private);
+
+
+
+};
+
+
 
 } //namespace phidgets
 

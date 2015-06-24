@@ -46,6 +46,18 @@ project(phidgets_api)
 
 find_package(catkin REQUIRED)
 
+
+IF(CMAKE_COMPILER_IS_GNUCC)
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+ELSE()
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+ENDIF()
+
+
+#TESTS
+SET(COMPILE_TESTS TRUE) # Set False if you want to build this package without Catkin
+
+
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES phidgets_api
@@ -72,9 +84,13 @@ target_link_libraries(phidgets_api ${catkin_LIBRARIES} phidget21)
 
 
 # Test programs
-add_executable(phidgets_api_test_gps tests/test_gps.cpp)
-target_link_libraries(phidgets_api_test_gps ${catkin_LIBRARIES} phidgets_api)
+if(COMPILE_TESTS)
+    add_executable(phidgets_api_test_gps_async tests/test_gps_async.cpp)
+    target_link_libraries(phidgets_api_test_gps_async ${catkin_LIBRARIES} phidgets_api)
 
+    add_executable(phidgets_api_test_gps_sync tests/test_gps_sync.cpp)
+    target_link_libraries(phidgets_api_test_gps_sync ${catkin_LIBRARIES} phidgets_api)
+endif()
 
 
 # Intallation
