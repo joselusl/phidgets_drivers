@@ -276,7 +276,6 @@ int GpsSync::run()
             this->positionFixStatusChangeHandler(status);
 
             // Position change
-            //this->positionChangeHandler(latitude, longitude, altitude, heading, velocity, date, time, NMEAdata);
             this->positionHandler(latitude, longitude, altitude);
             this->headingHandler(heading);
             this->velocityHandler(velocity);

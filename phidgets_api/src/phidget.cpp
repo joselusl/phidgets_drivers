@@ -15,8 +15,8 @@ Phidget::~Phidget()
 
 void Phidget::registerHandlers()
 {
-  CPhidget_set_OnAttach_Handler(handle_, &Phidget::AttachHandler, this); 
-  CPhidget_set_OnDetach_Handler(handle_, &Phidget::DetachHandler, this); 
+    CPhidget_set_OnAttach_Handler(handle_, &Phidget::AttachHandler, this);
+    CPhidget_set_OnDetach_Handler(handle_, &Phidget::DetachHandler, this);
 	CPhidget_set_OnError_Handler (handle_, &Phidget::ErrorHandler,  this);
 }
 

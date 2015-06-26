@@ -14,13 +14,13 @@ int main(void)
     printf("Opening device");
     MyGps.open(serial_number);
 
-    printf("Waiting for GPS to be attached...");
+    printf("Waiting for GPS to be attached...\n");
     int result = MyGps.waitForAttachment(10000);
     if(result)
     {
       const char *err;
         CPhidget_getErrorDescription(result, &err);
-        printf("Problem waiting for GPS attachment: %s Make sure the USB cable is connected and you have executed the phidgets_c_api/setup-udev.sh script.", err);
+        printf("Problem waiting for GPS attachment: %s Make sure the USB cable is connected and you have executed the phidgets_c_api/setup-udev.sh script.\n", err);
         return 0;
     }
 
