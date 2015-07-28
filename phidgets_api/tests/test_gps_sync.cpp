@@ -10,26 +10,9 @@ int main(void)
 
     phidgets::GpsSyncTest MyGps;
 
-
-    printf("Opening device");
-    MyGps.open(serial_number);
-
-    printf("Waiting for GPS to be attached...\n");
-    int result = MyGps.waitForAttachment(10000);
-    if(result)
-    {
-      const char *err;
-        CPhidget_getErrorDescription(result, &err);
-        printf("Problem waiting for GPS attachment: %s Make sure the USB cable is connected and you have executed the phidgets_c_api/setup-udev.sh script.\n", err);
-        return 0;
-    }
+    MyGps.initDevice(serial_number);
 
     MyGps.run();
-
-    std::cout<<"Press enter to finish"<<std::endl;
-    std::string key;
-    getline(std::cin, key);
-
 
     return 1;
 }

@@ -6,11 +6,11 @@ PLUGINLIB_DECLARE_CLASS (phidgets_gps, PhidgetsGpsNodelet, PhidgetsGpsNodelet, n
 
 void PhidgetsGpsNodelet::onInit()
 {
-  NODELET_INFO("Initializing Phidgets IMU Nodelet");
+  NODELET_INFO("Initializing Phidgets GPS Nodelet");
   
   // TODO: Do we want the single threaded or multithreaded NH?
   ros::NodeHandle nh         = getMTNodeHandle();
   ros::NodeHandle nh_private = getMTPrivateNodeHandle();
 
-  gps_ = new GpsAsyncRosI(nh, nh_private);
+  gps_ = new GpsSyncRosI(nh, nh_private);
 }

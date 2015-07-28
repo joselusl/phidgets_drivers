@@ -29,14 +29,25 @@ class Gps : public Phidget
     protected:
         CPhidgetGPSHandle gps_handle_;
 
+
+        // Device Serial number
+    protected:
+        int serial_number;
+
+        // Init Device
+    public:
+        int initDevice();
+        int initDevice(int serial_number);
+
+
         // Private Handlers called on events
     protected:
         // Static
         static int PositionChange_HandlerStatic(CPhidgetGPSHandle gps, void *userptr, double latitude, double longitude, double altitude);
         static int PositionFixStatusChange_HandlerStatic(CPhidgetGPSHandle gps, void *userptr, int status);
 
-    protected:
         // Virtual non-static -> Different for sync or async
+    protected:
         virtual int PositionChange_Handler(CPhidgetGPSHandle gps, double latitude, double longitude, double altitude)=0;
         virtual int PositionFixStatusChange_Handler(CPhidgetGPSHandle gps, int status)=0;
 
@@ -53,7 +64,7 @@ class Gps : public Phidget
         virtual void positionFixStatusChangeHandler(int status)=0;
 
     private:
-        virtual int registerGpsHandlers();
+        int registerGpsHandlers();
 
 };
 
@@ -131,12 +142,20 @@ class GpsSync : public virtual Gps
 
         // Run method
     public:
+        int runStep();
         int run();
 };
 
 
 class GpsTest : public virtual Gps
 {
+public:
+    GpsTest()
+    {
+        std::cout<<"GpsTest()"<<std::endl;
+        return;
+    }
+
     public:
         // Processing on position change -> User must define for the application
         virtual void positionHandler(double latitude, double longitude, double altitude);
@@ -153,6 +172,12 @@ class GpsTest : public virtual Gps
 
 class GpsAsyncTest : public GpsAsync, public GpsTest
 {
+public:
+    GpsAsyncTest()
+    {
+        std::cout<<"GpsAsyncTest()"<<std::endl;
+        return;
+    }
 
 };
 

@@ -30,6 +30,33 @@ int Gps::registerGpsHandlers()
     return 1;
 }
 
+
+int Gps::initDevice()
+{
+    std::cout<<"Opening device"<<std::endl;
+    this->open(serial_number);
+
+    std::cout<<"Waiting for GPS to be attached..."<<std::endl;
+    int result = waitForAttachment(10000);
+    if(result)
+    {
+      const char *err;
+        CPhidget_getErrorDescription(result, &err);
+        std::cout<<"Problem waiting for GPS attachment: %s Make sure the USB cable is connected and you have executed the phidgets_c_api/setup-udev.sh script."<<std::endl;
+        return 1;
+    }
+    return 0;
+}
+
+int Gps::initDevice(int serial_number)
+{
+    this->serial_number=serial_number;
+    initDevice();
+    return 0;
+}
+
+
+
 int Gps::PositionChange_HandlerStatic(CPhidgetGPSHandle gps, void *userptr, double latitude, double longitude, double altitude)
 {
     ((Gps*)userptr)->PositionChange_Handler(gps, latitude, longitude, altitude);
@@ -38,7 +65,7 @@ int Gps::PositionChange_HandlerStatic(CPhidgetGPSHandle gps, void *userptr, doub
 
 int Gps::PositionFixStatusChange_HandlerStatic(CPhidgetGPSHandle gps, void *userptr, int status)
 {
-    ((Gps*)userptr)->PositionFixStatusChange_Handler(gps, status);
+    (static_cast<Gps*>(userptr))->PositionFixStatusChange_Handler(gps, status);
     return 1;
 }
 
@@ -239,57 +266,64 @@ int GpsSync::initStatusValues()
     return 1;
 }
 
+int GpsSync::runStep()
+{
+    if(!this->is_signal_acquired)
+    {
+        // Reset status
+        initStatusValues();
+
+        // Do nothing - Sleep
+        std::this_thread::sleep_for(this->period_time);
+    }
+    else
+    {
+        // Work
+
+        // Date and time
+        // TODO check
+        CPhidgetGPS_getDate(this->gps_handle_, &date);
+        CPhidgetGPS_getTime(this->gps_handle_, &time);
+
+        // NMEA data
+        // TODO check
+        CPhidgetGPS_getNMEAData(this->gps_handle_, &NMEAdata);
+
+        // Checks
+        if(!is_position_fixed)
+        {
+            is_position_acquired=false;
+            initPoseValues();
+        }
+
+        // Fix Status
+        this->positionFixStatusChangeHandler(status);
+
+        // Position change
+        this->positionHandler(latitude, longitude, altitude);
+        this->headingHandler(heading);
+        this->velocityHandler(velocity);
+        this->dateAndTimeHandler(date, time);
+        this->nmeaDataHandler(NMEAdata);
+
+
+        // Sleep
+        this->time_ref = this->time_ref + period_time;
+        std::this_thread::sleep_until(this->time_ref);
+    }
+
+    return 0;
+}
+
 int GpsSync::run()
 {
     // Run all the time
     while(1)
     {
-        if(!this->is_signal_acquired)
-        {
-            // Reset status
-            initStatusValues();
-
-            // Do nothing - Sleep
-            std::this_thread::sleep_for(this->period_time);
-        }
-        else
-        {
-            // Work
-
-            // Date and time
-            // TODO check
-            CPhidgetGPS_getDate(this->gps_handle_, &date);
-            CPhidgetGPS_getTime(this->gps_handle_, &time);
-
-            // NMEA data
-            // TODO check
-            CPhidgetGPS_getNMEAData(this->gps_handle_, &NMEAdata);
-
-            // Checks
-            if(!is_position_fixed)
-            {
-                is_position_acquired=false;
-                initPoseValues();
-            }
-
-            // Fix Status
-            this->positionFixStatusChangeHandler(status);
-
-            // Position change
-            this->positionHandler(latitude, longitude, altitude);
-            this->headingHandler(heading);
-            this->velocityHandler(velocity);
-            this->dateAndTimeHandler(date, time);
-            this->nmeaDataHandler(NMEAdata);
-
-
-            // Sleep
-            this->time_ref = this->time_ref + period_time;
-            std::this_thread::sleep_until(this->time_ref);
-        }
+        runStep();
     }
 
-    return 1;
+    return 0;
 }
 
 

@@ -83,26 +83,15 @@ GpsRosI::GpsRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
   // TimeReference_msg
   TimeReference_msg.source="phidgets_gps_s_n_"+std::to_string(serial_number);
 
-  // Init device
-  initDevice();
+  // Init device -> NO!!
+  //initDevice();
+
+
+  //
+  return;
 }
 
-void GpsRosI::initDevice()
-{
-	ROS_INFO("Opening device");
-    open(serial_number);
 
-    ROS_INFO("Waiting for GPS to be attached...");
-	int result = waitForAttachment(10000);
-	if(result)
-	{
-	  const char *err;
-		CPhidget_getErrorDescription(result, &err);
-        ROS_FATAL("Problem waiting for GPS attachment: %s Make sure the USB cable is connected and you have executed the phidgets_c_api/setup-udev.sh script.", err);
-	}
-
-
-}
 
 
 
@@ -119,7 +108,7 @@ void GpsRosI::initDevice()
 
 void GpsRosI::positionHandler(double latitude, double longitude, double altitude)
 {
-    processNavSatFixData(latitude, longitude, altitude);
+    this->processNavSatFixData(latitude, longitude, altitude);
     return;
 }
 
@@ -135,7 +124,7 @@ void GpsRosI::velocityHandler(double velocity)
 
 void GpsRosI::dateAndTimeHandler(GPSDate date, GPSTime time)
 {
-    processTimeReferenceData(date, time);
+    this->processTimeReferenceData(date, time);
     return;
 }
 
@@ -147,7 +136,7 @@ void GpsRosI::nmeaDataHandler(NMEAData NMEAdata)
 
 void GpsRosI::positionFixStatusChangeHandler(int status)
 {
-    processNavSatStatusData(status);
+    this->processNavSatStatusData(status);
     return;
 }
 
@@ -196,10 +185,18 @@ void GpsRosI::processNavSatStatusData(int status)
 
 
 GpsAsyncRosI::GpsAsyncRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
-    GpsRosI(nh,nh_private),
-    GpsAsync()
+    GpsAsync(),
+    GpsRosI(nh,nh_private)
 {
 
+    return;
+}
+
+
+GpsSyncRosI::GpsSyncRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
+    GpsSync(),
+    GpsRosI(nh,nh_private)
+{
 
     return;
 }

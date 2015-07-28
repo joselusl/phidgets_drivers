@@ -44,10 +44,6 @@ class GpsRosI : public virtual Gps
 
 
     private:
-
-        // Device Serial number
-        int serial_number;
-
         // frame id
         std::string frame_id_;
 
@@ -83,21 +79,19 @@ class GpsRosI : public virtual Gps
         double position_stdev_;
 
 
-    private:
-        void initDevice();
-
-    protected:
         // Function event handlers
-        void positionHandler(double latitude, double longitude, double altitude);
-        void headingHandler(double heading);
-        void velocityHandler(double velocity);
-        void dateAndTimeHandler(GPSDate date, GPSTime time);
-        void nmeaDataHandler(NMEAData NMEAdata);
-
-        void positionFixStatusChangeHandler(int status);
-
     protected:
+        virtual void positionHandler(double latitude, double longitude, double altitude);
+        virtual void headingHandler(double heading);
+        virtual void velocityHandler(double velocity);
+        virtual void dateAndTimeHandler(GPSDate date, GPSTime time);
+        virtual void nmeaDataHandler(NMEAData NMEAdata);
+
+        virtual void positionFixStatusChangeHandler(int status);
+
+
         // Function process data
+    protected:
         void processNavSatFixData(double latitude, double longitude, double altitude);
         void processTimeReferenceData(GPSDate date, GPSTime time);
         void processNavSatStatusData(int status);
@@ -112,6 +106,19 @@ class GpsAsyncRosI : public GpsAsync, public GpsRosI
 public:
 
     GpsAsyncRosI(ros::NodeHandle nh, ros::NodeHandle nh_private);
+
+
+
+};
+
+
+
+class GpsSyncRosI : public GpsSync, public GpsRosI
+{
+
+public:
+
+    GpsSyncRosI(ros::NodeHandle nh, ros::NodeHandle nh_private);
 
 
 
