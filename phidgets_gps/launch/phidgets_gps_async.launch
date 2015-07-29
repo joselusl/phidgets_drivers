@@ -9,18 +9,18 @@
 
   <arg name="frame_id" default="gps"/>
 
-  <arg name="position_stdev" value="0.02"/>
+  <arg name="position_stdev" default="0.02"/>
 
-  <arg name="serial_number" value="286007"/>
+  <arg name="serial_number" default="286007"/>
 
-  <arg name="nav_sat_fix_topic_name" value="gps/nav_sat_fix"/>
-  <arg name="nav_sat_status_topic_name" value="gps/nav_sat_status"/>
-  <arg name="time_reference_topic_name" value="time_reference"/>
+  <arg name="nav_sat_fix_topic_name" default="gps/nav_sat_fix"/>
+  <arg name="nav_sat_status_topic_name" default="gps/nav_sat_status"/>
+  <arg name="time_reference_topic_name" default="time_reference"/>
   
 
   <!-- NODE -->
   <group ns="$(arg application_namespace)/$(arg device_namespace)">
-    <node name="$(arg node_name)" pkg="phidgets_gps" type="phidgets_gps_async_node" output="screen">
+    <node name="phidgets_gps_async_node" pkg="phidgets_gps" type="phidgets_gps_async_node" output="screen">
 
       <!--  -->
       <param name="frame_id" type="string" value="$(arg frame_id)"/>

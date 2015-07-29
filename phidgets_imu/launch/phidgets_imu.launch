@@ -10,24 +10,24 @@
   <arg name="frame_id" default="imu"/>
 
   <!-- # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms) -->
-  <arg name="period" value="4"/>
+  <arg name="period" default="4"/>
 
   <!--
   # IMU mala = 297692
   # IMU buena = 354790
   -->
-  <arg name="serial_number" value="297692"/>
+  <arg name="serial_number" default="297692"/>
 
-  <arg name="imu_raw_data_topic_name" value="imu/data_raw"/>
-  <arg name="mag_raw_data_topic_name" value="mag/data_raw"/>
-  <arg name="imu_is_calibrated_topic_name" value="is_calibrated"/>
+  <arg name="imu_raw_data_topic_name" default="imu/data_raw"/>
+  <arg name="mag_raw_data_topic_name" default="mag/data_raw"/>
+  <arg name="imu_is_calibrated_topic_name" default="is_calibrated"/>
 
-  <arg name="imu_calibrate_service_name" value="calibrate"/>
+  <arg name="imu_calibrate_service_name" default="calibrate"/>
 
   
   <!-- NODE -->
   <group ns="$(arg application_namespace)/$(arg device_namespace)">
-    <node name="$(arg node_name)" pkg="phidgets_imu" type="phidgets_imu_node" output="screen">
+    <node name="phidgets_imu_node" pkg="phidgets_imu" type="phidgets_imu_node" output="screen">
 
       <!--  -->
       <param name="period" type="int" value="$(arg period)"/>
