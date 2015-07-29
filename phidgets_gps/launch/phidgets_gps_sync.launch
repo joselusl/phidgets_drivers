@@ -5,7 +5,7 @@
   <!-- PARAMETERS -->
   <arg name="application_namespace" default="fuseon"/>
   <arg name="device_namespace" default="phidgets_gps"/>
-  <arg name="node_name" default="phidgets_gps_sync"/>
+  <arg name="node_name" default="phidgets_gps_sync_node"/>
 
   <arg name="frame_id" default="phidgets_gps"/>
 
@@ -20,7 +20,7 @@
 
   <!-- NODE -->
   <group ns="$(arg application_namespace)/$(arg device_namespace)">
-    <node name="phidgets_gps_sync_node" pkg="phidgets_gps" type="phidgets_gps_sync_node" output="screen">
+    <node name="$(arg node_name)" pkg="phidgets_gps" type="phidgets_gps_sync_node" output="screen">
 
       <!--  -->
       <param name="frame_id" type="string" value="$(arg frame_id)"/>

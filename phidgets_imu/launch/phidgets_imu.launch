@@ -5,7 +5,7 @@
   <!-- PARAMETERS -->
   <arg name="application_namespace" default="fuseon"/>
   <arg name="device_namespace" default="phidgets_imu"/>
-  <arg name="node_name" default="phidgets_imu"/>
+  <arg name="node_name" default="phidgets_imu_node"/>
 
   <arg name="frame_id" default="imu"/>
 
@@ -27,7 +27,7 @@
   
   <!-- NODE -->
   <group ns="$(arg application_namespace)/$(arg device_namespace)">
-    <node name="phidgets_imu_node" pkg="phidgets_imu" type="phidgets_imu_node" output="screen">
+    <node name="$(arg node_name)" pkg="phidgets_imu" type="phidgets_imu_node" output="screen">
 
       <!--  -->
       <param name="period" type="int" value="$(arg period)"/>
