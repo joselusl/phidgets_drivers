@@ -33,7 +33,7 @@ GpsRosI::GpsRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
   if(!nh_private_.getParam ("nav_sat_status_topic_name", NavSatStatus_topic_name))
       NavSatStatus_topic_name = "phidgets_gps/gps/nav_sat_status";
   if(!nh_private_.getParam ("time_reference_topic_name", TimeReference_topic_name))
-      TimeReference_topic_name = "phidgets_gps/time_reference";
+      TimeReference_topic_name = "phidgets_gps/gps/time_reference";
 
 
   // **** advertise topics

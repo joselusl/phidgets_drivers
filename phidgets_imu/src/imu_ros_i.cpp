@@ -179,22 +179,32 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
   mag_msg->header.frame_id = frame_id_;
   mag_msg->header.stamp = time_now;
 
+
+  // JL: Magnetic field info: http://www.phidgets.com/docs/1044_User_Guide
   if (data[i]->magneticField[0] != PUNK_DBL)
   {
     mag_msg->vector.x = data[i]->magneticField[0];
     mag_msg->vector.y = data[i]->magneticField[1];
     mag_msg->vector.z = data[i]->magneticField[2];
+
+    mag_publisher_.publish(mag_msg);
   }
   else
   {
-    double nan = std::numeric_limits<double>::quiet_NaN();
+      // JL: Do not publish
 
-    mag_msg->vector.x = nan;
-    mag_msg->vector.y = nan;
-    mag_msg->vector.z = nan;
+//    double nan = std::numeric_limits<double>::quiet_NaN();
+
+//    mag_msg->vector.x = nan;
+//    mag_msg->vector.y = nan;
+//    mag_msg->vector.z = nan;
+
+
   }
    
-  mag_publisher_.publish(mag_msg);
+    //mag_publisher_.publish(mag_msg);
+
+  return;
 }
 
 void ImuRosI::dataHandler(CPhidgetSpatial_SpatialEventDataHandle *data, int count)
