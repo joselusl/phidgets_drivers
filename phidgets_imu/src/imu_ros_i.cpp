@@ -160,9 +160,9 @@ void ImuRosI::processImuData(CPhidgetSpatial_SpatialEventDataHandle* data, int i
   imu_msg->header.stamp = time_now;
 
   // set linear acceleration
-  imu_msg->linear_acceleration.x = data[i]->acceleration[0] * G;
-  imu_msg->linear_acceleration.y = data[i]->acceleration[1] * G;
-  imu_msg->linear_acceleration.z = data[i]->acceleration[2] * G;
+  imu_msg->linear_acceleration.x = - data[i]->acceleration[0] * G;
+  imu_msg->linear_acceleration.y = - data[i]->acceleration[1] * G;
+  imu_msg->linear_acceleration.z = - data[i]->acceleration[2] * G;
 
   // set angular velocities
   imu_msg->angular_velocity.x = data[i]->angularRate[0] * (M_PI / 180.0);
